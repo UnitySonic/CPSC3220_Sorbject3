@@ -1,0 +1,25 @@
+NAME: Michael Merritt
+
+DESCRIPTION:
+	This is a memory allocator. Specifically, it is a big bag of pages style memory allocator.
+	It requests pages from the operating system and stores objects in them. Each page stores 
+	objects in blocks whose size is a power of 2. Once the object's size is bigger than 1024,
+	however, it is given a custom page where the block isn't nessecarily a power of 2. 
+
+DESIGN:
+	One of the biggest parts of this library is that it uses a sort of cache system. Basically I
+	also create pages whose purpose is to store pointers that point to a page that has a freeblock
+	of space available. By doing this I can make mallocs have a pretty speedy time...for the most
+	part. The big issue with this is it has an overreliance on system calls. Also, although it
+	doesn't waste a TON of extra space, it does still waste space on reserving pages simply for
+	caches. If I had given it more thought, maybe there was an easier way to set this up. At the
+	very least it's far better than my original, going from speeds of 40s down to around 1.5s
+
+	HOWEVER, this was the design for my v2 allocator...which unfortunately doesn't work. I had to
+	revert to my v1 design. V1 is very slow as it traverses a linked lists of pages to find a free
+	block to put data in.
+
+KNOWN PROBLEMS:
+	For this project, my issues seemed to be speed and whatever happens in test cast 5. I tried to
+	implement a cache based approach to solve this problem, but my code ended up not working. As far
+	as I can tell the only issue with this implementation is speed.
